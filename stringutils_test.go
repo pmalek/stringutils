@@ -1,7 +1,9 @@
 package stringutils
 
 import (
+	"strings"
 	"testing"
+	"testing/quick"
 )
 
 type stripCharsTestData struct {
@@ -31,6 +33,17 @@ func Test_Stripchars(t *testing.T) {
 		if actual != tt.expected {
 			t.Errorf("Stripchars(%q, %q): Expected: %q, actual %q", tt.str, tt.c, tt.expected, actual)
 		}
+	}
+}
+
+func Test_Stripchars_quick(t *testing.T) {
+	f := func(str, chr string) bool {
+		ret := Stripchars(str, chr)
+		return !strings.ContainsAny(ret, chr)
+	}
+
+	if err := quick.Check(f, nil); err != nil {
+		t.Error(err)
 	}
 }
 

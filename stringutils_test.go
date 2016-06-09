@@ -1,9 +1,11 @@
 package stringutils
 
 import (
+	"math/rand"
 	"strings"
 	"testing"
 	"testing/quick"
+	"time"
 )
 
 type stripCharsTestData struct {
@@ -42,7 +44,11 @@ func Test_Stripchars_quick(t *testing.T) {
 		return !strings.ContainsAny(ret, chr)
 	}
 
-	if err := quick.Check(f, nil); err != nil {
+	cfg := &quick.Config{
+		Rand: rand.New(rand.NewSource(time.Now().UnixNano())),
+	}
+
+	if err := quick.Check(f, cfg); err != nil {
 		t.Error(err)
 	}
 }
